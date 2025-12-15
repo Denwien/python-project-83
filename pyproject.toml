@@ -5,5 +5,7 @@ dependencies = [
     "flask",
     "gunicorn",
     "python-dotenv",
-    "flake8"
+    "flake8",
+    "psycopg>=3.3.2",
+    "validators>=0.35.0",
 ]

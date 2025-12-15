@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="ru">
+<body>
+<table data-test="urls" class="table">
+  <tbody>
+    {% for id, name, created_at in urls %}
+    <tr>
+      <td>{{ id }}</td>
+      <td><a href="{{ url_for('url_show', id=id) }}">{{ name }}</a></td>
+      <td>{{ created_at }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</body>
+</html>
