@@ -1,23 +1,26 @@
 #!/bin/bash
 set -e
 
-# Проверка переменной окружения DATABASE_URL
 if [ -z "$DATABASE_URL" ]; then
   echo "Ошибка: DATABASE_URL не установлена"
   exit 1
 fi
 
-echo "Синхронизация зависимостей..."
 uv sync
-
-echo "Компиляция Python пакетов..."
 python -m compileall .
 
-echo "Подключение к PostgreSQL и инициализация базы..."
-# Если есть SQL-скрипт для инициализации
-if [ -f init.sql ]; then
-  echo "Выполняем init.sql на базе $DATABASE_URL"
-  psql "$DATABASE_URL" -f init.sql
-fi
+python <<'EOF'
+import os
+import psycopg
 
-echo "База готова, сборка завершена!"
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL не установлена")
+
+init_file = "init.sql"
+if os.path.exists(init_file):
+    with psycopg.connect(DATABASE_URL) as conn:
+        with conn.cursor() as cur:
+            cur.execute(open(init_file).read())
+        conn.commit()
+EOF
