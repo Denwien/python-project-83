@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 
 import requests
 from requests.exceptions import RequestException
+from bs4 import BeautifulSoup
 from flask import Flask, render_template, request, redirect, url_for, flash
 from dotenv import load_dotenv
 from validators import url as validate_url
@@ -51,10 +52,7 @@ def urls_create():
                 url_id = row[0]
                 flash('Страница успешно добавлена', 'success')
             else:
-                cur.execute(
-                    'SELECT id FROM urls WHERE name = %s',
-                    (normalized_url,)
-                )
+                cur.execute('SELECT id FROM urls WHERE name = %s', (normalized_url,))
                 url_id = cur.fetchone()[0]
                 flash('Страница уже существует', 'info')
 
@@ -77,7 +75,6 @@ def urls_index():
             '''
         )
         urls = cur.fetchall()
-
     return render_template('urls.html', urls=urls)
 
 
@@ -85,15 +82,12 @@ def urls_index():
 def url_show(id):
     conn = get_connection()
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
-        cur.execute(
-            'SELECT * FROM urls WHERE id = %s',
-            (id,)
-        )
+        cur.execute('SELECT * FROM urls WHERE id = %s', (id,))
         url = cur.fetchone()
 
         cur.execute(
             '''
-            SELECT id, status_code, created_at
+            SELECT id, status_code, h1, title, description, created_at
             FROM url_checks
             WHERE url_id = %s
             ORDER BY created_at DESC
@@ -110,21 +104,34 @@ def create_check(url_id):
     conn = get_connection()
 
     try:
+        # Получаем URL
         with conn.cursor() as cur:
             cur.execute('SELECT name FROM urls WHERE id = %s', (url_id,))
             url = cur.fetchone()[0]
 
+        # Запрос к сайту
         response = requests.get(url, timeout=5)
         response.raise_for_status()
 
+        # SEO-анализ через BeautifulSoup
+        soup = BeautifulSoup(response.text, 'html.parser')
+        h1_tag = soup.find('h1')
+        title_tag = soup.find('title')
+        meta_desc_tag = soup.find('meta', attrs={'name': 'description'})
+
+        h1 = h1_tag.get_text(strip=True) if h1_tag else None
+        title = title_tag.get_text(strip=True) if title_tag else None
+        description = meta_desc_tag['content'].strip() if meta_desc_tag and meta_desc_tag.get('content') else None
+
+        # Сохраняем проверку
         with conn:
             with conn.cursor() as cur:
                 cur.execute(
                     '''
-                    INSERT INTO url_checks (url_id, status_code, created_at)
-                    VALUES (%s, %s, %s)
+                    INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s)
                     ''',
-                    (url_id, response.status_code, datetime.now())
+                    (url_id, response.status_code, h1, title, description, datetime.now())
                 )
 
         flash('Страница успешно проверена', 'success')
@@ -137,3 +144,6 @@ def create_check(url_id):
 
     return redirect(url_for('url_show', id=url_id))
 
+
+if __name__ == '__main__':
+    app.run(debug=True)
