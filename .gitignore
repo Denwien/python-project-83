@@ -15,3 +15,8 @@ venv/
 # Local scripts
 update_checks.sh
 
+.venv/
+venv/
+.env
+*.log
+.pytest_cache/
