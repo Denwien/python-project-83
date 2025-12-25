@@ -121,17 +121,35 @@ def create_check(url_id):
 
         h1 = h1_tag.get_text(strip=True) if h1_tag else None
         title = title_tag.get_text(strip=True) if title_tag else None
-        description = meta_desc_tag['content'].strip() if meta_desc_tag and meta_desc_tag.get('content') else None
+        description = (
+            meta_desc_tag['content'].strip()
+            if meta_desc_tag and meta_desc_tag.get('content')
+            else None
+        )
 
         # Сохраняем проверку
         with conn:
             with conn.cursor() as cur:
                 cur.execute(
                     '''
-                    INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at)
+                    INSERT INTO url_checks (
+                        url_id,
+                        status_code,
+                        h1,
+                        title,
+                        description,
+                        created_at
+                    )
                     VALUES (%s, %s, %s, %s, %s, %s)
                     ''',
-                    (url_id, response.status_code, h1, title, description, datetime.now())
+                    (
+                        url_id,
+                        response.status_code,
+                        h1,
+                        title,
+                        description,
+                        datetime.now()
+                    )
                 )
 
         flash('Страница успешно проверена', 'success')
