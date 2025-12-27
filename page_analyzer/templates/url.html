@@ -14,6 +14,17 @@
 </nav>
 
 <main class="container mt-5">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mb-4">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
   <h1>{{ url.name }}</h1>
   <p>Добавлено: {{ url.created_at }}</p>
 
@@ -22,19 +33,26 @@
   </form>
 
   <h3>Проверки</h3>
+
   {% if url_checks %}
     <ul class="list-group">
       {% for check in url_checks %}
         <li class="list-group-item">
-          ID: {{ check.id }}, Дата: {{ check.created_at }}, Код: {{ check.status_code }},
-          H1: {{ check.h1 or '-' }}, Title: {{ check.title or '-' }},
-          Description: {{ check.description or '-' }}
+          <strong>ID:</strong> {{ check.id }},
+          <strong>Дата:</strong> {{ check.created_at }},
+          <strong>Код:</strong> {{ check.status_code }},
+          <strong>H1:</strong> {{ check.h1 or '-' }},
+          <strong>Title:</strong> {{ check.title or '-' }},
+          <strong>Description:</strong> {{ check.description or '-' }}
         </li>
       {% endfor %}
     </ul>
   {% else %}
     <p>Проверок ещё нет</p>
   {% endif %}
+
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
