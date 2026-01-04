@@ -1,58 +1,84 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hexlet Page Analyzer - {{ url.name }}</title>
+  <title>Hexlet Page Analyzer</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+<nav class="navbar navbar-dark bg-primary mb-4">
   <div class="container">
     <a class="navbar-brand" href="/">Hexlet Page Analyzer</a>
   </div>
 </nav>
 
-<main class="container mt-5">
+<main class="container">
 
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       {% for category, message in messages %}
-        <div class="alert alert-{{ category }} mb-4">
-          {{ message }}
-        </div>
+        <div class="alert alert-{{ category }}">{{ message }}</div>
       {% endfor %}
     {% endif %}
   {% endwith %}
 
-  <h1>{{ url.name }}</h1>
-  <p>Добавлено: {{ url.created_at }}</p>
+  <h1>Сайт: {{ url.name }}</h1>
 
+  <!-- Таблица URL -->
+  <table class="table table-bordered mt-3" data-test="url">
+    <tbody>
+      <tr>
+        <th>ID</th>
+        <td>{{ url.id }}</td>
+      </tr>
+      <tr>
+        <th>Имя</th>
+        <td>{{ url.name }}</td>
+      </tr>
+      <tr>
+        <th>Дата создания</th>
+        <td>{{ url.created_at }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Кнопка запуска проверки -->
   <form action="{{ url_for('create_check', url_id=url.id) }}" method="post" class="mb-4">
-    <button type="submit" class="btn btn-success">Run Check</button>
+    <button type="submit" class="btn btn-success">
+      Запустить проверку
+    </button>
   </form>
 
-  <h3>Проверки</h3>
+  <h2>Проверки</h2>
 
-  {% if url_checks %}
-    <ul class="list-group">
+  <!-- Таблица проверок -->
+  <table class="table table-striped" data-test="checks">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Код ответа</th>
+        <th>h1</th>
+        <th>title</th>
+        <th>description</th>
+        <th>Дата</th>
+      </tr>
+    </thead>
+    <tbody>
       {% for check in url_checks %}
-        <li class="list-group-item">
-          <strong>ID:</strong> {{ check.id }},
-          <strong>Дата:</strong> {{ check.created_at }},
-          <strong>Код:</strong> {{ check.status_code }},
-          <strong>H1:</strong> {{ check.h1 or '-' }},
-          <strong>Title:</strong> {{ check.title or '-' }},
-          <strong>Description:</strong> {{ check.description or '-' }}
-        </li>
+        <tr>
+          <td>{{ check.id }}</td>
+          <td>{{ check.status_code }}</td>
+          <td>{{ check.h1 or '' }}</td>
+          <td>{{ check.title or '' }}</td>
+          <td>{{ check.description or '' }}</td>
+          <td>{{ check.created_at }}</td>
+        </tr>
       {% endfor %}
-    </ul>
-  {% else %}
-    <p>Проверок ещё нет</p>
-  {% endif %}
+    </tbody>
+  </table>
 
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
