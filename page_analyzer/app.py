@@ -52,7 +52,10 @@ def urls_create():
                 url_id = row[0]
                 flash('Страница успешно добавлена', 'success')
             else:
-                cur.execute('SELECT id FROM urls WHERE name = %s', (normalized_url,))
+                cur.execute(
+                    'SELECT id FROM urls WHERE name = %s',
+                    (normalized_url,)
+                )
                 url_id = cur.fetchone()[0]
                 flash('Страница уже существует', 'info')
 
