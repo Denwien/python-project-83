@@ -3,14 +3,14 @@ from datetime import datetime
 from urllib.parse import urlparse
 
 import requests
-from requests.exceptions import RequestException
-from bs4 import BeautifulSoup
-from flask import Flask, render_template, request, redirect, url_for, flash
 from dotenv import load_dotenv
-from validators import url as validate_url
+from flask import Flask, flash, redirect, render_template, request, url_for
 from psycopg2.extras import RealDictCursor
+from requests.exceptions import RequestException
+from validators import url as validate_url
 
 from page_analyzer.db import get_connection
+from page_analyzer.parser import parse_html
 
 load_dotenv()
 
@@ -116,19 +116,11 @@ def create_check(url_id):
         response = requests.get(url, timeout=5)
         response.raise_for_status()
 
-        # SEO-анализ через BeautifulSoup
-        soup = BeautifulSoup(response.text, 'html.parser')
-        h1_tag = soup.find('h1')
-        title_tag = soup.find('title')
-        meta_desc_tag = soup.find('meta', attrs={'name': 'description'})
-
-        h1 = h1_tag.get_text(strip=True) if h1_tag else None
-        title = title_tag.get_text(strip=True) if title_tag else None
-        description = (
-            meta_desc_tag['content'].strip()
-            if meta_desc_tag and meta_desc_tag.get('content')
-            else None
-        )
+        # Парсим HTML
+        data = parse_html(response.text)
+        h1 = data["h1"]
+        title = data["title"]
+        description = data["description"]
 
         # Сохраняем проверку
         with conn:
