@@ -14,7 +14,9 @@ def get_connection():
     return psycopg2.connect(DATABASE_URL)
 
 
-def add_url(normalized_url: str, created_at: datetime) -> tuple[int | None, bool]:
+def add_url(
+    normalized_url: str, created_at: datetime
+) -> tuple[int | None, bool]:
     """
     Добавляет URL в базу данных.
     Возвращает (url_id, is_new) где is_new=True если URL был добавлен,
