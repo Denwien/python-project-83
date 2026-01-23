@@ -38,5 +38,5 @@ jobs:
         with:
           projectBaseDir: .
           args: >
-            -Dsonar.organization=denwien
+            -Dsonar.organization=Denwien
             -Dsonar.projectKey=Denwien_python-project-83
