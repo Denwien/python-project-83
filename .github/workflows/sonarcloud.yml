@@ -26,9 +26,9 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
           make install
       
-      - name: Run tests with coverage
+      - name: Run tests
         run: |
-          uv run pytest --cov=page_analyzer --cov-report=xml || true
+          uv run pytest || true
       
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
