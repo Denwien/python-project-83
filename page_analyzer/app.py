@@ -21,7 +21,8 @@ from page_analyzer.url_normalizer import normalize_url
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+# nosemgrep: python.lang.security.audit.hardcoded-secret.hardcoded-secret
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # noqa: S105
 
 
 @app.get('/')
