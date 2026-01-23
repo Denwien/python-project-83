@@ -6,7 +6,7 @@
 
 ### SonarQube Quality Gate:
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=Denwien_python-project-83&metric=alert_status)](https://sonarcloud.io/dashboard?id=Denwien_python-project-83)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Denwien_python-project-83&metric=coverage)](https://sonarcloud.io/dashboard?id=Denwien_python-project-83)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Denwien_python-project-83&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=Denwien_python-project-83)
 
 ## О проекте
 
