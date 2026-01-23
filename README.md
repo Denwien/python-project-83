@@ -5,8 +5,8 @@
 [![Linter Status](https://github.com/Denwien/python-project-83/actions/workflows/my_workflow.yml/badge.svg)](https://github.com/Denwien/python-project-83/actions/workflows/my_workflow.yml)
 
 ### SonarQube Quality Gate:
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=Denwien_python-project-83&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Denwien_python-project-83)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Denwien_python-project-83&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Denwien_python-project-83)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=Denwien_python-project-83&metric=alert_status)](https://sonarcloud.io/dashboard?id=Denwien_python-project-83)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Denwien_python-project-83&metric=coverage)](https://sonarcloud.io/dashboard?id=Denwien_python-project-83)
 
 ## О проекте
 
