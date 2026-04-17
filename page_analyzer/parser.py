@@ -26,7 +26,9 @@ def truncate_with_ellipsis(
     return f'{value[:max_length - 3]}...'
 
 
-def force_ellipsis(value: str | None, max_length: int = MAX_META_LENGTH) -> str | None:
+def force_ellipsis(
+    value: str | None, max_length: int = MAX_META_LENGTH
+) -> str | None:
     if value is None:
         return None
     if value.endswith('...'):
