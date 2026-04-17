@@ -3,6 +3,14 @@ from bs4 import BeautifulSoup
 MAX_META_LENGTH = 255
 
 
+def extract_text(tag) -> str | None:
+    if not tag:
+        return None
+
+    text = ' '.join(tag.stripped_strings)
+    return text if text else None
+
+
 def truncate_with_ellipsis(
     value: str | None, max_length: int = MAX_META_LENGTH
 ) -> str | None:
@@ -12,19 +20,15 @@ def truncate_with_ellipsis(
 
 
 def parse_html(html: str) -> dict:
-    soup = BeautifulSoup(html, "html.parser")
+    soup = BeautifulSoup(html, "lxml")
 
     h1_tag = soup.find("h1")
     title_tag = soup.find("title")
     meta_desc_tag = soup.find("meta", attrs={"name": "description"})
 
     return {
-        "h1": truncate_with_ellipsis(
-            h1_tag.get_text(separator=' ', strip=True) if h1_tag else None
-        ),
-        "title": truncate_with_ellipsis(
-            title_tag.get_text(separator=' ', strip=True) if title_tag else None
-        ),
+        "h1": truncate_with_ellipsis(extract_text(h1_tag)),
+        "title": truncate_with_ellipsis(extract_text(title_tag)),
         "description": truncate_with_ellipsis(
             meta_desc_tag["content"].strip()
             if meta_desc_tag and meta_desc_tag.get("content")
