@@ -6,7 +6,7 @@ MAX_META_LENGTH = 255
 def truncate_with_ellipsis(
     value: str | None, max_length: int = MAX_META_LENGTH
 ) -> str | None:
-    if value is None or len(value) <= max_length:
+    if value is None or len(value) < max_length:
         return value
     return f'{value[:max_length - 3]}...'
 
